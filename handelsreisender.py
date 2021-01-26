@@ -10,6 +10,8 @@ graph_strings = [
     "Leipzig - Merseburg - Querfurt - Teutschenthal"
 ]
 
+CONSTRUCTION_STRING = "Köthen → Bernburg, Bernburg → Könnern, Eisleben → Querfurt, Querfurt → Teutschenthal, Könnern → Halle, Halle → Bitterfeld, Leipzig → Delitzsch, Leipzig → Merseburg, Querfurt → Merseburg, Merseburg → Halle"
+
 graph = {
 
 }
@@ -34,10 +36,18 @@ def make_graph():
                 add_edge(places[i], places[i+1])
                 add_edge(places[i+1], places[i])
 
+def remove_construction():
+    constructions = CONSTRUCTION_STRING.split(", ")
+    for con in constructions:
+        con_arr = con.split(" → ")
+        graph[con_arr[1]].remove(con_arr[0])
+
+
 def find_cycles():
     print(graph)
     print("\nEs gibt " + str(len(graph)) + " verschiedene Städte.")
     start = input("\nStartstadt eingeben: ")
+    end = input("\nEndstadt eingeben: ")
 
     path_indices = []
     cycles = []
@@ -82,6 +92,7 @@ def find_cycles():
                 path_indices.append(0)
         if not cycle in cycles:
             cycles.append(get_path(path_indices))
+            print(get_path(path_indices))
 
         # Im Pfad zurückgehen, bis man verzweigen kann
         while True:
@@ -93,17 +104,24 @@ def find_cycles():
                 incr = path_indices.pop()
                 incr += 1
                 path_indices.append(incr)
-                if len(path_indices) == 1:
-                    found_all = True
                 break
             else:
                 path_indices.pop()
+                if len(path_indices) < 1:
+                    found_all = True
+                    break
 
     solutions = []
+    length = len(graph)+1
+    if start is not end:
+        length = len(graph)
 
     for each in cycles:
-        if len(each) == len(graph)+1 and each[0] == each[-1]:
-            solutions.append(each)
+        if len(each) == length and each[0] == start and each[-1] == end:
+            if start != end and each.index(end) == len(each)-1:
+                solutions.append(each)
+            elif start == end:
+                solutions.append(each)
 
     print("\nLösungen: \n")
     print(solutions)
@@ -111,5 +129,10 @@ def find_cycles():
     print("\n" + str(len(solutions)) + " Lösung(en) gefunden!")
 
 make_graph()
+
+confirm = input("\nSollen die Baustellen berücksichtigt werden? (j,n)")
+if confirm == "j":
+    remove_construction()
+
 find_cycles()
 
