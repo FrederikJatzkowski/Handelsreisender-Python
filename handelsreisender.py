@@ -101,7 +101,7 @@ def find_cycles():
     solutions = []
 
     for each in cycles:
-        if len(each) == len(graph) and each[0] == each[-1]:
+        if len(each) == len(graph)+1 and each[0] == each[-1]:
             solutions.append(each)
 
     print("Lösungen: ")
