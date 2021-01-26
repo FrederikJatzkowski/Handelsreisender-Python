@@ -36,7 +36,8 @@ def make_graph():
 
 def find_cycles():
     print(graph)
-    start = input("Startstadt eingeben: ")
+    print("\nEs gibt " + str(len(graph)) + " verschiedene Städte.")
+    start = input("\nStartstadt eingeben: ")
 
     path_indices = []
     cycles = []
@@ -104,8 +105,10 @@ def find_cycles():
         if len(each) == len(graph)+1 and each[0] == each[-1]:
             solutions.append(each)
 
-    print("Lösungen: ")
+    print("\nLösungen: \n")
     print(solutions)
+
+    print("\n" + str(len(solutions)) + " Lösung(en) gefunden!")
 
 make_graph()
 find_cycles()
